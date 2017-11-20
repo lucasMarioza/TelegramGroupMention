@@ -1,0 +1,28 @@
+{
+  "name": "teleco-mention",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasMarioza/TelegramGroupMetion.git"
+  },
+  "keywords": [
+    "bot",
+    "telegram",
+    "mention"
+  ],
+  "author": "https://github.com/lucasMarioza",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucasMarioza/TelegramGroupMetion/issues"
+  },
+  "homepage": "https://github.com/lucasMarioza/TelegramGroupMetion#readme",
+  "dependencies": {
+    "slimbot": "^0.7.8"
+  }
+}
