@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier --write *.js",
     "start": "node index.js"
   },
   "repository": {
@@ -26,5 +27,11 @@
     "express": "^4.16.2",
     "firebase": "^4.6.2",
     "slimbot": "^0.7.8"
+  },
+  "devDependencies": {
+    "prettier": "^1.8.2"
+  },
+  "prettier": {
+    "semi": false
   }
 }
