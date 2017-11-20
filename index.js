@@ -1,6 +1,15 @@
 const Slimbot = require('slimbot');
 const slimbot = new Slimbot(process.env['KEY']);
 
+//using this to host on heroku
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => res.send('Hello World!'));
+
+app.listen(process.env['KEY'], () => console.log(''));
+
+
 let mentions = {
 
 };
