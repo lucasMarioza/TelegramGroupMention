@@ -50,14 +50,14 @@ getMention = function(mention, username) {
     return ""
   return mentions[mention]
     .map(id => {
-      return id !== username ? " @" + id : ""
+      return id !== username ? ` @${id}` : ""
     })
     .join("")
 }
 
 getAllMentions = function() {
   return Object.keys(mentions)
-    .map(id => "@" + id)
+    .map(id => `@${id}`)
     .join("\n")
 }
 
@@ -76,7 +76,7 @@ slimbot.on("message", message => {
   if (!message.text) return
   mention = firebase
     .database()
-    .ref("/groups/" + message.chat.id)
+    .ref(`/groups/${message.chat.id}`)
     .once("value")
     .then(function(snapshot) {
       mentions = snapshot.val() || {}
@@ -87,12 +87,12 @@ slimbot.on("message", message => {
         if (newMention(mention, user)) {
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" + mention + " created."
+            `Mention @${mention} created.`
           )
         } else {
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" + mention + " already exists."
+            `Mention @${mention} already exists.`
           )
         }
       } else if (message.text.startsWith("/assignTo ")) {
@@ -101,14 +101,12 @@ slimbot.on("message", message => {
         if (assignToMention(mention, user)) {
           slimbot.sendMessage(
             message.chat.id,
-            "user @" + user + " assigned to @" + mention + "."
+            `user @${user} assigned to @${mention}.`
           )
         } else {
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" +
-              mention +
-              " does not exists. Use /newMention to create."
+            `Mention @${mention} does not exists. Use /newMention to create.`
           )
         }
       } else if (message.text.startsWith("/unassign ")) {
@@ -117,14 +115,12 @@ slimbot.on("message", message => {
         if (unassign(mention, user)) {
           slimbot.sendMessage(
             message.chat.id,
-            "user @" + user + " unassigned of @" + mention + "."
+            `user @${user} unassigned of @${mention}.`
           )
         } else {
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" +
-              mention +
-              " does not exists or you already wasn't assigned into it."
+            `Mention @${mention} does not exists or you already wasn't assigned into it.`
           )
         }
       } else if (message.text.startsWith("/deleteMention ")) {
@@ -132,12 +128,12 @@ slimbot.on("message", message => {
         if (deleteMention(mention))
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" + mention + " deleted."
+            `Mention @${mention} deleted.`
           )
         else
           slimbot.sendMessage(
             message.chat.id,
-            "Mention @" + mention + " doesn't exist."
+            `Mention @${mention} doesn't exist.`
           )
       } else if (message.text.startsWith("/mentions")) {
         let response = getAllMentions().trim()
@@ -161,7 +157,7 @@ slimbot.on("message", message => {
       }
       firebase
         .database()
-        .ref("/groups/" + message.chat.id)
+        .ref(`/groups/${message.chat.id}`)
         .set(mentions)
     })
 })
