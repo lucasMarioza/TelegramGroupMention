@@ -44,10 +44,14 @@ deleteMention = function(mention) {
   delete mentions[mention]
 }
 
-getMention = function(mention) {
+getMention = function(mention, username) {
   if (mentions[mention] === undefined || mentions[mention].length == 0)
     return ""
-  return mentions[mention].map(id => "@" + id).join(" ")
+  return mentions[mention]
+    .map(id => {
+      return id !== username ? "@" + id : ""
+    })
+    .join(" ")
 }
 
 // Register listeners
@@ -60,7 +64,6 @@ slimbot.on("message", message => {
     .once("value")
     .then(function(snapshot) {
       mentions = snapshot.val() || {}
-      console.log(mentions)
 
       if (message.text.startsWith("/newMention ")) {
         let mention = message.text.split(" ")[1]
@@ -101,13 +104,12 @@ slimbot.on("message", message => {
         )
       } else if (message.text[0] === "@") {
         let mention = message.text.split(" ")[0].replace("@", "")
-        let response = getMention(mention)
+        let response = getMention(mention, message.from.username).trim()
         if (response !== "")
           slimbot.sendMessage(message.chat.id, response, {
             reply_to_message_id: message.message_id
           })
       }
-      console.log(mentions)
       firebase
         .database()
         .ref("/groups/" + message.chat.id)
