@@ -1,5 +1,5 @@
 const Slimbot = require("slimbot")
-const slimbot = new Slimbot(process.env["KEY"])
+const slimbot = new Slimbot(process.env["BOT_KEY"])
 //using this to host on heroku
 const express = require("express")
 const app = express()
@@ -12,7 +12,7 @@ const firebase = require("firebase")
 
 // Initialize Firebase
 var config = {
-  apiKey: process.env["API_KEY"],
+  apiKey: process.env["FIREBASE_KEY"],
   authDomain: "mentionbot-fa86b.firebaseapp.com",
   databaseURL: "https://mentionbot-fa86b.firebaseio.com",
   projectId: "mentionbot-fa86b",
