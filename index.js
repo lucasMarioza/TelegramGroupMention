@@ -58,6 +58,16 @@ getAllMentions = function(){
     .map(id => "@" + id )
     .join("\n")
 }
+
+unassign = function(mention, username){
+  if (mentions[mention] === undefined) return false
+
+  if (!mentions[mention].find(u => u == username)) {
+    return false
+  }
+  mentions[mention] = mentions[mention].filter(id => id !== username)
+  return true
+}
 // Register listeners
 
 slimbot.on("message", message => {
@@ -97,6 +107,22 @@ slimbot.on("message", message => {
             "Mention @" +
               mention +
               " does not exists. Use /newMention to create."
+          )
+        }
+      }else if (message.text.startsWith("/unassign ")) {
+        let mention = message.text.split(" ")[1]
+        let user = message.from.username
+        if (unassign(mention, user)) {
+          slimbot.sendMessage(
+            message.chat.id,
+            "user @" + user + " unassigned of @" + mention + "."
+          )
+        } else {
+          slimbot.sendMessage(
+            message.chat.id,
+            "Mention @" +
+              mention +
+              " does not exists or you already wasn't assigned into it."
           )
         }
       } else if (message.text.startsWith("/deleteMention ")) {
