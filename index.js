@@ -40,7 +40,9 @@ assignToMention = function(mention, username) {
 }
 
 deleteMention = function(mention) {
+  if (!Array.isArray(mentions[mention])) return false
   delete mentions[mention]
+  return true
 }
 
 getMention = function(mention, username) {
@@ -127,11 +129,16 @@ slimbot.on("message", message => {
         }
       } else if (message.text.startsWith("/deleteMention ")) {
         let mention = message.text.split(" ")[1]
-        deleteMention(mention)
-        slimbot.sendMessage(
-          message.chat.id,
-          "Mention @" + mention + " deleted."
-        )
+        if (deleteMention(mention))
+          slimbot.sendMessage(
+            message.chat.id,
+            "Mention @" + mention + " deleted."
+          )
+        else
+          slimbot.sendMessage(
+            message.chat.id,
+            "Mention @" + mention + " doesn't exist."
+          )
       } else if (message.text.startsWith("/mentions")) {
         let response = getAllMentions().trim()
         if (response !== "") {
