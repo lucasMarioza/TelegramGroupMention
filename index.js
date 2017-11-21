@@ -56,7 +56,7 @@ getMention = function(mention, username) {
 getAllMentions = function(){
   return Object.keys(mentions)
     .map(id => "@" + id )
-    .join(" ")
+    .join("\n")
 }
 // Register listeners
 
