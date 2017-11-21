@@ -24,13 +24,13 @@ const fireApp = firebase.initializeApp(config)
 
 let mentions = {}
 
-newMention = function(mention, username) {
+function newMention(mention, username) {
   if (mentions[mention] !== undefined) return false
   mentions[mention] = [username]
   return true
 }
 
-assignToMention = function(mention, username) {
+function assignToMention(mention, username) {
   if (mentions[mention] === undefined) return false
 
   if (!mentions[mention].find(u => u == username)) {
@@ -39,13 +39,13 @@ assignToMention = function(mention, username) {
   return true
 }
 
-deleteMention = function(mention) {
+function deleteMention(mention) {
   if (!Array.isArray(mentions[mention])) return false
   delete mentions[mention]
   return true
 }
 
-getMention = function(mention, username) {
+function getMention(mention, username) {
   if (mentions[mention] === undefined || mentions[mention].length == 0)
     return ""
   return mentions[mention]
@@ -55,13 +55,13 @@ getMention = function(mention, username) {
     .join("")
 }
 
-getAllMentions = function() {
+function getAllMentions() {
   return Object.keys(mentions)
     .map(id => `@${id}`)
     .join("\n")
 }
 
-unassign = function(mention, username) {
+function unassign(mention, username) {
   if (mentions[mention] === undefined) return false
 
   if (!mentions[mention].find(u => u == username)) {
@@ -70,8 +70,8 @@ unassign = function(mention, username) {
   mentions[mention] = mentions[mention].filter(id => id !== username)
   return true
 }
-// Register listeners
 
+// Register listeners
 slimbot.on("message", message => {
   if (!message.text) return
   mention = firebase
