@@ -53,13 +53,13 @@ getMention = function(mention, username) {
     .join("")
 }
 
-getAllMentions = function(){
+getAllMentions = function() {
   return Object.keys(mentions)
-    .map(id => "@" + id )
+    .map(id => "@" + id)
     .join("\n")
 }
 
-unassign = function(mention, username){
+unassign = function(mention, username) {
   if (mentions[mention] === undefined) return false
 
   if (!mentions[mention].find(u => u == username)) {
@@ -109,7 +109,7 @@ slimbot.on("message", message => {
               " does not exists. Use /newMention to create."
           )
         }
-      }else if (message.text.startsWith("/unassign ")) {
+      } else if (message.text.startsWith("/unassign ")) {
         let mention = message.text.split(" ")[1]
         let user = message.from.username
         if (unassign(mention, user)) {
@@ -134,17 +134,17 @@ slimbot.on("message", message => {
         )
       } else if (message.text.startsWith("/mentions")) {
         let response = getAllMentions().trim()
-        if (response !== ""){
+        if (response !== "") {
           slimbot.sendMessage(message.chat.id, response, {
             reply_to_message_id: message.message_id
           })
-        }else{
+        } else {
           slimbot.sendMessage(
             message.chat.id,
             "No mentions created for this group yet."
           )
         }
-      }else if (message.text[0] === "@") {
+      } else if (message.text[0] === "@") {
         let mention = message.text.split(" ")[0].replace("@", "")
         let response = getMention(mention, message.from.username).trim()
         if (response !== "")
