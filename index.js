@@ -49,9 +49,9 @@ getMention = function(mention, username) {
     return ""
   return mentions[mention]
     .map(id => {
-      return id !== username ? "@" + id : ""
+      return id !== username ? " @" + id : ""
     })
-    .join(" ")
+    .join("")
 }
 
 // Register listeners
