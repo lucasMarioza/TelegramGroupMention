@@ -40,7 +40,6 @@ assignToMention = function(mention, username) {
 }
 
 deleteMention = function(mention) {
-  console.log("deleted " + mention + " " + mentions[mention])
   delete mentions[mention]
 }
 
@@ -54,6 +53,11 @@ getMention = function(mention, username) {
     .join("")
 }
 
+getAllMentions = function(){
+  return Object.keys(mentions)
+    .map(id => "@" + id )
+    .join(" ")
+}
 // Register listeners
 
 slimbot.on("message", message => {
@@ -102,7 +106,19 @@ slimbot.on("message", message => {
           message.chat.id,
           "Mention @" + mention + " deleted."
         )
-      } else if (message.text[0] === "@") {
+      } else if (message.text.startsWith("/mentions")) {
+        let response = getAllMentions().trim()
+        if (response !== ""){
+          slimbot.sendMessage(message.chat.id, response, {
+            reply_to_message_id: message.message_id
+          })
+        }else{
+          slimbot.sendMessage(
+            message.chat.id,
+            "No mentions created for this group yet."
+          )
+        }
+      }else if (message.text[0] === "@") {
         let mention = message.text.split(" ")[0].replace("@", "")
         let response = getMention(mention, message.from.username).trim()
         if (response !== "")
