@@ -49,6 +49,7 @@ function unassign(mention, username) {
 
 module.exports = {
   mentions,
+  newMention,
   assignToMention,
   deleteMention,
   getMention,
