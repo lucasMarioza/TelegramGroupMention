@@ -1,4 +1,6 @@
 const commands = require("./commands")
+const Slimbot = require("slimbot")
+const slimbot = new Slimbot(process.env["BOT_KEY"])
 
 const Handler = (command, handler) => ({ command, handler })
 
@@ -54,7 +56,7 @@ const handlers = [
     else
       slimbot.sendMessage(message.chat.id, `Mention @${mention} doesn't exist.`)
   }),
-  Handler("/mentions ", message => {
+  Handler("/mentions", message => {
     let response = commands.getAllMentions().trim()
     if (response !== "") {
       slimbot.sendMessage(message.chat.id, response, {
