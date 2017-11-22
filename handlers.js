@@ -3,7 +3,7 @@ const commands = require("./commands")
 const Handler = (command, handler) => ({ command, handler })
 
 const handlers = [
-  Handler("/newMention", message => {
+  Handler("/newMention ", message => {
     let mention = message.text.split(" ")[1]
     let user = message.from.username
     if (commands.newMention(mention, user)) {
@@ -15,7 +15,7 @@ const handlers = [
       )
     }
   }),
-  Handler("/assignTo", message => {
+  Handler("/assignTo ", message => {
     let mention = message.text.split(" ")[1]
     let user = message.from.username
     if (commands.assignToMention(mention, user)) {
@@ -30,7 +30,7 @@ const handlers = [
       )
     }
   }),
-  Handler("/unassign", message => {
+  Handler("/unassign ", message => {
     let mention = message.text.split(" ")[1]
     let user = message.from.username
     if (commands.unassign(mention, user)) {
@@ -47,14 +47,14 @@ const handlers = [
       )
     }
   }),
-  Handler("/deleteMention", message => {
+  Handler("/deleteMention ", message => {
     let mention = message.text.split(" ")[1]
     if (commands.deleteMention(mention))
       slimbot.sendMessage(message.chat.id, `Mention @${mention} deleted.`)
     else
       slimbot.sendMessage(message.chat.id, `Mention @${mention} doesn't exist.`)
   }),
-  Handler("/mentions", message => {
+  Handler("/mentions ", message => {
     let response = commands.getAllMentions().trim()
     if (response !== "") {
       slimbot.sendMessage(message.chat.id, response, {
