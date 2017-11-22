@@ -7,6 +7,7 @@ const Handler = (command, handler) => ({ command, handler })
 const handlers = [
   Handler("/newMention ", message => {
     let mention = message.text.split(" ")[1]
+    while(mention[0] == '@')mention = mention.substr(-mention.length+1)
     let user = message.from.username
     if (commands.newMention(mention, user)) {
       slimbot.sendMessage(message.chat.id, `Mention @${mention} created.`)
