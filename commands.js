@@ -1,30 +1,38 @@
-let mentions = {}
+let __mentions = {}
+
+function setMentionsVar(mentions){
+  __mentions= mentions;
+}
+
+function getMentionsVar(){
+  return __mentions;
+}
 
 function newMention(mention, username) {
-  if (mentions[mention] !== undefined) return false
-  mentions[mention] = [username]
+  if (__mentions[mention] !== undefined) return false
+  __mentions[mention] = [username]
   return true
 }
 
 function assignToMention(mention, username) {
-  if (mentions[mention] === undefined) return false
+  if (__mentions[mention] === undefined) return false
 
-  if (!mentions[mention].find(u => u == username)) {
-    mentions[mention].push(username)
+  if (!__mentions[mention].find(u => u == username)) {
+    __mentions[mention].push(username)
   }
   return true
 }
 
 function deleteMention(mention) {
-  if (!Array.isArray(mentions[mention])) return false
-  delete mentions[mention]
+  if (!Array.isArray(__mentions[mention])) return false
+  delete __mentions[mention]
   return true
 }
 
 function getMention(mention, username) {
-  if (mentions[mention] === undefined || mentions[mention].length == 0)
+  if (__mentions[mention] === undefined || __mentions[mention].length == 0)
     return ""
-  return mentions[mention]
+  return __mentions[mention]
     .map(id => {
       return id !== username ? ` @${id}` : ""
     })
@@ -32,23 +40,24 @@ function getMention(mention, username) {
 }
 
 function getAllMentions() {
-  return Object.keys(mentions)
+  return Object.keys(__mentions)
     .map(id => `@${id}`)
     .join("\n")
 }
 
 function unassign(mention, username) {
-  if (mentions[mention] === undefined) return false
+  if (__mentions[mention] === undefined) return false
 
-  if (!mentions[mention].find(u => u == username)) {
+  if (!__mentions[mention].find(u => u == username)) {
     return false
   }
-  mentions[mention] = mentions[mention].filter(id => id !== username)
+  __mentions[mention] = __mentions[mention].filter(id => id !== username)
   return true
 }
 
 module.exports = {
-  mentions,
+  getMentionsVar,
+  setMentionsVar,
   newMention,
   assignToMention,
   deleteMention,

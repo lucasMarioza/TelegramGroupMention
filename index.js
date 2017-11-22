@@ -33,12 +33,12 @@ slimbot.on("message", message => {
     .ref(`/groups/${message.chat.id}`)
     .once("value")
     .then(function(snapshot) {
-      commands.mentions = snapshot.val() || {}
+      commands.setMentionsVar(snapshot.val() || {})
       handleMessage(message)
       firebase
         .database()
         .ref(`/groups/${message.chat.id}`)
-        .set(commands.mentions)
+        .set(commands.getMentionsVar())
     })
 })
 
