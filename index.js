@@ -1,17 +1,19 @@
 const Slimbot = require("slimbot")
 const slimbot = new Slimbot(process.env["BOT_KEY"])
-//using this to host on heroku
-const express = require("express")
-const app = express()
+const restify = require('restify');
+
 
 const commands = require("./commands")
 const handleMessage = require("./handlers")
 
-app.get("/", (req, res) => res.send("Hello World!"))
-
-app.listen(process.env["PORT"], () => console.log(""))
 
 const firebase = require("firebase")
+
+
+let server = restify.createServer();
+//console.log(restify);
+server.use(restify.plugins.bodyParser());
+
 
 // Initialize Firebase
 var config = {
@@ -22,11 +24,16 @@ var config = {
   storageBucket: "mentionbot-fa86b.appspot.com",
   messagingSenderId: "271181642792"
 }
-console.log(config)
+
 const fireApp = firebase.initializeApp(config)
 
+slimbot.setWebhook({ url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}` });
+
+slimbot.getWebhookInfo();
+
 // Register listeners
-slimbot.on("message", message => {
+server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
+  let message = req.body.message;
   if (!message.text) return
   mention = firebase
     .database()
@@ -40,8 +47,6 @@ slimbot.on("message", message => {
         .ref(`/groups/${message.chat.id}`)
         .set(commands.getMentionsVar())
     })
-})
+});
 
-// Call API
-
-slimbot.startPolling()
+server.listen(process.env["PORT"]);
