@@ -32,7 +32,7 @@ slimbot.setWebhook({ url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}` }
 slimbot.getWebhookInfo();
 
 // Register listeners
-server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
+server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res,next) {
   let message = req.body.message;
   console.log('a')
   if (!message || !message.text) return
@@ -50,7 +50,7 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
         .ref(`/groups/${message.chat.id}`)
         .set(commands.getMentionsVar())
     })
-
+  return next()
 });
 
 server.listen(process.env["PORT"]);
