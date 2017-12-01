@@ -33,11 +33,8 @@ slimbot.getWebhookInfo();
 
 // Register listeners
 server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
-  let message = req.body;
-  console.log(req.body)
-  return
-  //console.log(req);
-  /*if (!message.text) return
+  let message = req.body.message;
+  if (!message.text) return
   mention = firebase
     .database()
     .ref(`/groups/${message.chat.id}`)
@@ -49,7 +46,7 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
         .database()
         .ref(`/groups/${message.chat.id}`)
         .set(commands.getMentionsVar())
-    })*/
+    })
 
 });
 
