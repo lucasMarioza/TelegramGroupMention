@@ -36,7 +36,7 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
   let message = req.body.message;
   console.log('teste-')
   console.log(req);
-  if (!message.text) return
+  /*if (!message.text) return
   mention = firebase
     .database()
     .ref(`/groups/${message.chat.id}`)
@@ -48,7 +48,7 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
         .database()
         .ref(`/groups/${message.chat.id}`)
         .set(commands.getMentionsVar())
-    })
+    })*/
 });
 
 server.listen(process.env["PORT"]);
