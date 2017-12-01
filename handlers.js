@@ -88,7 +88,7 @@ const handlers = [
 ]
 
 const handleMessage = message => {
-  console.log(message.text.replace(/\s{1,}/g,' '))
+  message =message.text.replace(/\s{1,}/g,' ')
   const match = handlers.find(handler =>
     message.text.startsWith(handler.command)
   )
