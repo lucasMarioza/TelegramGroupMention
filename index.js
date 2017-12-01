@@ -33,8 +33,8 @@ slimbot.getWebhookInfo();
 
 // Register listeners
 server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
-  let message = req.body.message;
-  console.log('teste-')
+  let message = req.body;
+  console.log(req.body)
   return
   //console.log(req);
   /*if (!message.text) return
