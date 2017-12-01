@@ -34,7 +34,7 @@ slimbot.getWebhookInfo();
 // Register listeners
 server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res) {
   let message = req.body.message;
-  if (!message.text) return
+  if (!message || !message.text) return
   mention = firebase
     .database()
     .ref(`/groups/${message.chat.id}`)
