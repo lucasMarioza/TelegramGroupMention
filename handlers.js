@@ -11,6 +11,7 @@ function cleanMentionName(mention) {
 const handlers = [
   Handler("/newMention ", message => {
     let mention = message.text.split(" ")[1]
+    mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.newMention(mention, user)) {
       slimbot.sendMessage(message.chat.id, `Mention @${mention} created.`)
@@ -23,6 +24,7 @@ const handlers = [
   }),
   Handler("/assignTo ", message => {
     let mention = message.text.split(" ")[1]
+    mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.assignToMention(mention, user)) {
       slimbot.sendMessage(
@@ -38,6 +40,7 @@ const handlers = [
   }),
   Handler("/unassign ", message => {
     let mention = message.text.split(" ")[1]
+    mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.unassign(mention, user)) {
       slimbot.sendMessage(
@@ -55,6 +58,7 @@ const handlers = [
   }),
   Handler("/deleteMention ", message => {
     let mention = message.text.split(" ")[1]
+    mention = cleanMentionName(mention)
     if (commands.deleteMention(mention))
       slimbot.sendMessage(message.chat.id, `Mention @${mention} deleted.`)
     else
