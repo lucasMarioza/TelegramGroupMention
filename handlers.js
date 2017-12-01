@@ -4,6 +4,10 @@ const slimbot = new Slimbot(process.env["BOT_KEY"])
 
 const Handler = (command, handler) => ({ command, handler })
 
+function cleanMentionName(mention) {
+  return mention.replace(/^@*/g, "")
+}
+
 const handlers = [
   Handler("/newMention ", message => {
     let mention = message.text.split(" ")[1]

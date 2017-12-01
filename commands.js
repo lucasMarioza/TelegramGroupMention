@@ -1,11 +1,11 @@
 let __mentions = {}
 
-function setMentionsVar(mentions){
-  __mentions= mentions;
+function setMentionsVar(mentions) {
+  __mentions = mentions
 }
 
-function getMentionsVar(){
-  return __mentions;
+function getMentionsVar() {
+  return __mentions
 }
 
 function newMention(mention, username) {

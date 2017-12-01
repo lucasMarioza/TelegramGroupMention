@@ -1,19 +1,15 @@
 const Slimbot = require("slimbot")
 const slimbot = new Slimbot(process.env["BOT_KEY"])
-const restify = require('restify');
-
+const restify = require("restify")
 
 const commands = require("./commands")
 const handleMessage = require("./handlers")
 
-
 const firebase = require("firebase")
 
-
-let server = restify.createServer();
+let server = restify.createServer()
 //console.log(restify);
-server.use(restify.plugins.bodyParser());
-
+server.use(restify.plugins.bodyParser())
 
 // Initialize Firebase
 var config = {
@@ -27,17 +23,19 @@ var config = {
 
 const fireApp = firebase.initializeApp(config)
 
-slimbot.setWebhook({ url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}` });
+slimbot.setWebhook({
+  url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}`
+})
 
-slimbot.getWebhookInfo();
+slimbot.getWebhookInfo()
 
 // Register listeners
-server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res,next) {
-  let message = req.body.message;
-  if (!message || !message.text){
+server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res, next) {
+  let message = req.body.message
+  if (!message || !message.text) {
     res.send(200)
     return next()
-  } 
+  }
 
   mention = firebase
     .database()
@@ -51,8 +49,8 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res,next) {
         .ref(`/groups/${message.chat.id}`)
         .set(commands.getMentionsVar())
     })
-    res.send(200)
+  res.send(200)
   return next()
-});
+})
 
-server.listen(process.env["PORT"]);
+server.listen(process.env["PORT"])
