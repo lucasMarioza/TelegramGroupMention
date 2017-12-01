@@ -89,7 +89,7 @@ const handlers = [
 
 const handleMessage = message => {
   const match = handlers.find(handler =>
-    message.text.startsWith(handler.command)
+    message.text.startsWith(handler.command.replace(/\s{1,}/g,' '))
   )
   if (match !== undefined) match.handler(message)
 }
