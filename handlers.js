@@ -89,9 +89,9 @@ const handlers = [
 
 const handleMessage = message => {
   const match = handlers.find(handler =>
-    message.text.startsWith(handler.command.replace(/\s{1,}/g,' '))
+    message.text.startsWith(handler.command)
   )
-  if (match !== undefined) match.handler(message)
+  if (match !== undefined) match.handler(message.replace(/\s{1,}/g,' '))
 }
 
 module.exports = handleMessage
