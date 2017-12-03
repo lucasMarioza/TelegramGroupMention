@@ -36,12 +36,14 @@ function getMention(mention, username) {
     .map(id => {
       return id !== username ? ` @${id}` : ""
     })
+    .sort()
     .join("")
 }
 
 function getAllMentions() {
   return Object.keys(__mentions)
     .map(id => `@${id}`)
+    .sort()
     .join("\n")
 }
 
