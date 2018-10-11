@@ -9,7 +9,7 @@ function cleanMentionName(mention) {
 }
 
 const handlers = [
-  Handler("/newMention ", message => {
+  Handler(/^\/newMention /, message => {
     let mention = message.text.split(" ")[1]
     mention = cleanMentionName(mention)
     let user = message.from.username
@@ -22,8 +22,8 @@ const handlers = [
       )
     }
   }),
-  Handler("/assignTo ", message => {
-    let mention = message.text.split(" ")[1]
+  Handler(/^\/enter[ _]/, message => {
+    let mention = message.text.split(/[ _]/)[1]
     mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.assignToMention(mention, user)) {
@@ -38,8 +38,8 @@ const handlers = [
       )
     }
   }),
-  Handler("/unassign ", message => {
-    let mention = message.text.split(" ")[1]
+  Handler(/^\/exit[ _]/, message => {
+    let mention = message.text.split(/[ _]/)[1]
     mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.unassign(mention, user)) {
@@ -50,13 +50,11 @@ const handlers = [
     } else {
       slimbot.sendMessage(
         message.chat.id,
-        `Mention @${
-          mention
-        } does not exists or you already wasn't assigned into it.`
+        `Mention @${mention} does not exists or you already wasn't assigned into it.`
       )
     }
   }),
-  Handler("/deleteMention ", message => {
+  Handler(/^\/deleteMention /, message => {
     let mention = message.text.split(" ")[1]
     mention = cleanMentionName(mention)
     if (commands.deleteMention(mention))
@@ -64,7 +62,7 @@ const handlers = [
     else
       slimbot.sendMessage(message.chat.id, `Mention @${mention} doesn't exist.`)
   }),
-  Handler("/mentions", message => {
+  Handler(/^\/mentions/, message => {
     let response = commands.getAllMentions().trim()
     if (response !== "") {
       slimbot.sendMessage(message.chat.id, response, {
@@ -77,7 +75,7 @@ const handlers = [
       )
     }
   }),
-  Handler("@", message => {
+  Handler(/^\@.+/, message => {
     let mention = message.text.split(" ")[0].replace("@", "")
     let response = commands.getMention(mention, message.from.username).trim()
     if (response !== "")
@@ -89,9 +87,7 @@ const handlers = [
 
 const handleMessage = message => {
   message.text = message.text.replace(/\s{1,}/g, " ")
-  const match = handlers.find(handler =>
-    message.text.startsWith(handler.command)
-  )
+  const match = handlers.find(({ command }) => command.test(message.text))
   if (match !== undefined) match.handler(message)
 }
 
