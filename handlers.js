@@ -75,6 +75,15 @@ const handlers = [
       )
     }
   }),
+  Handler(/^\@admins/, async message => {
+    const admins = await slimbot.getChatAdministrators(message.chat.id)
+    const usernames = admins.result.map(({ user: { username } }) => username)
+    const response = usernames.map(username => `@${username}`).join(" ")
+    if (response !== "")
+      slimbot.sendMessage(message.chat.id, response, {
+        reply_to_message_id: message.message_id
+      })
+  }),
   Handler(/^\@.+/, message => {
     let mention = message.text.split(" ")[0].replace("@", "")
     let response = commands.getMention(mention, message.from.username).trim()
