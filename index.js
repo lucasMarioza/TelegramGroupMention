@@ -14,11 +14,11 @@ server.use(restify.plugins.bodyParser())
 // Initialize Firebase
 var config = {
   apiKey: process.env["FIREBASE_KEY"],
-  authDomain: "mentionbot-fa86b.firebaseapp.com",
-  databaseURL: "https://mentionbot-fa86b.firebaseio.com",
-  projectId: "mentionbot-fa86b",
-  storageBucket: "mentionbot-fa86b.appspot.com",
-  messagingSenderId: "271181642792"
+  authDomain: `${process.env["FIREBASE_ID"]}.firebaseapp.com`,
+  databaseURL: `https://${process.env["FIREBASE_ID"]}.firebaseio.com`,
+  projectId: process.env["FIREBASE_ID"],
+  storageBucket: `${process.env["FIREBASE_ID"]}.appspot.com`,
+  messagingSenderId: process.env["FIREBASE_SENDER"]
 }
 
 const fireApp = firebase.initializeApp(config)
