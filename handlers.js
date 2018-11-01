@@ -9,11 +9,11 @@ function cleanMentionName(mention) {
 }
 
 const handlers = [
-  Handler(/^\/newMention /, message => {
+  Handler(/^\/createMention /, message => {
     let mention = message.text.split(" ")[1]
     mention = cleanMentionName(mention)
     let user = message.from.username
-    if (commands.newMention(mention, user)) {
+    if (commands.createMention(mention, user)) {
       slimbot.sendMessage(message.chat.id, `Mention @${mention} created.`)
     } else {
       slimbot.sendMessage(
