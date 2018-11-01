@@ -91,6 +91,14 @@ const handlers = [
       slimbot.sendMessage(message.chat.id, response, {
         reply_to_message_id: message.message_id
       })
+  }),
+  Handler(/^\/list[ _]/, message => {
+    let mention = message.text.split(/[ _]/)[1]
+    let response = commands.getMentionMembers(mention).trim()
+    if (response !== "")
+      slimbot.sendMessage(message.chat.id, response, {
+        reply_to_message_id: message.message_id
+      })
   })
 ]
 
