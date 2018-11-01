@@ -8,7 +8,7 @@ function getMentionsVar() {
   return __mentions
 }
 
-function newMention(mention, username) {
+function createMention(mention, username) {
   if (__mentions[mention] !== undefined) return false
   __mentions[mention] = [username]
   return true
@@ -60,7 +60,7 @@ function unassign(mention, username) {
 module.exports = {
   getMentionsVar,
   setMentionsVar,
-  newMention,
+  createMention,
   assignToMention,
   deleteMention,
   getMention,
