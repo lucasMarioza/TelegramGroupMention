@@ -1,7 +1,16 @@
 # Telegram Group Mention
-Create custom mentions in your Telegram chat
+Create custom mentions in your Telegram chat, much like Discord's role mentions.
 
-## Getting Started
+## Usage
+* `/create_foo` to a create a group mention called `foo`
+* `/enter_foo` to subscribe to a group mention called `foo`
+* `/exit_foo` to unsubscribe from a group mention called `foo`
+* `/delete_foo` to delete a group mention called `foo`
+* `/list_foo` to list members of mention `foo` without tagging them
+* `/mentions` to list the group's mentions
+* `@admins` to tag group admins
+
+## Getting Starrted
 Clone this repo
 ```bash
 git clone https://github.com/lucasMarioza/TelegramGroupMention
@@ -18,9 +27,3 @@ export FIREBASE_KEY=...
 export FIREBASE_SENDER=...
 npm start
 ```
-
-## Commands
-`/createMention MENTION_NAME` creates a new group mention  
-`/assignTo MENTION_NAME` subscribe to a group mention  
-`/deleteMention MENTION_NAME` deletes a group mention
-`/list_foo` lists members of created mention `foo` without tagging them
