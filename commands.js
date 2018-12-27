@@ -8,7 +8,7 @@ function getMentionsVar() {
   return __mentions
 }
 
-function newMention(mention, username) {
+function createMention(mention, username) {
   if (__mentions[mention] !== undefined) return false
   __mentions[mention] = [username]
   return true
@@ -40,6 +40,14 @@ function getMention(mention, username) {
     .join("")
 }
 
+function getMentionMembers(mention) {
+  if (__mentions[mention] === undefined || __mentions[mention].length == 0)
+    return ""
+  return __mentions[mention]
+    .sort()
+    .join(", ")
+}
+
 function getAllMentions() {
   return Object.keys(__mentions)
     .map(id => `@${id}`)
@@ -60,10 +68,11 @@ function unassign(mention, username) {
 module.exports = {
   getMentionsVar,
   setMentionsVar,
-  newMention,
+  createMention,
   assignToMention,
   deleteMention,
   getMention,
+  getMentionMembers,
   getAllMentions,
   unassign
 }

@@ -20,6 +20,7 @@ npm start
 ```
 
 ## Commands
-`/newMention MENTION_NAME` creates a new group mention  
+`/createMention MENTION_NAME` creates a new group mention  
 `/assignTo MENTION_NAME` subscribe to a group mention  
 `/deleteMention MENTION_NAME` deletes a group mention
+`/list_foo` lists members of created mention `foo` without tagging them
