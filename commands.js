@@ -40,6 +40,14 @@ function getMention(mention, username) {
     .join("")
 }
 
+function getMentionMembers(mention) {
+  if (__mentions[mention] === undefined || __mentions[mention].length == 0)
+    return ""
+  return __mentions[mention]
+    .sort()
+    .join(", ")
+}
+
 function getAllMentions() {
   return Object.keys(__mentions)
     .map(id => `@${id}`)
@@ -64,6 +72,7 @@ module.exports = {
   assignToMention,
   deleteMention,
   getMention,
+  getMentionMembers,
   getAllMentions,
   unassign
 }
