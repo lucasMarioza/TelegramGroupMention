@@ -45,7 +45,7 @@ const handlers = [
       } else {
         slimbot.sendMessage(
           message.chat.id,
-          `Mention @${mention} does not exists. Use /newMention to create.`
+          `Mention @${mention} does not exists. Use /create to create.`
         )
       }
     }
