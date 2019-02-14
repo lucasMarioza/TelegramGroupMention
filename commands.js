@@ -43,9 +43,7 @@ function getMention(mention, username) {
 function getMentionMembers(mention) {
   if (__mentions[mention] === undefined || __mentions[mention].length == 0)
     return ""
-  return __mentions[mention]
-    .sort()
-    .join(", ")
+  return __mentions[mention].sort().join(", ")
 }
 
 function getAllMentions() {

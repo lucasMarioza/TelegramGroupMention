@@ -22,36 +22,60 @@ const handlers = [
       )
     }
   }),
-  Handler(/^\/enter[ _]/, message => {
-    let mention = message.text.split(/[ _]/)[1]
+  Handler(/^\/enter[ _]/, async message => {
+    let components = message.text.split(/[ _]/)
+    let [_, mention, ...users] = components
     mention = cleanMentionName(mention)
-    let user = message.from.username
-    if (commands.assignToMention(mention, user)) {
-      slimbot.sendMessage(
-        message.chat.id,
-        `user @${user} assigned to @${mention}.`
+
+    if (users.length === 0) users = [message.from.username]
+    else {
+      const admins = await slimbot.getChatAdministrators(message.chat.id)
+      const user = admins.result.find(
+        ({ user: { username } }) => username === message.from.username
       )
-    } else {
-      slimbot.sendMessage(
-        message.chat.id,
-        `Mention @${mention} does not exists. Use /newMention to create.`
-      )
+      if (user === undefined) return
+    }
+
+    for (user of users) {
+      if (commands.assignToMention(mention, user)) {
+        slimbot.sendMessage(
+          message.chat.id,
+          `user @${user} assigned to @${mention}.`
+        )
+      } else {
+        slimbot.sendMessage(
+          message.chat.id,
+          `Mention @${mention} does not exists. Use /newMention to create.`
+        )
+      }
     }
   }),
-  Handler(/^\/exit[ _]/, message => {
-    let mention = message.text.split(/[ _]/)[1]
+  Handler(/^\/exit[ _]/, async message => {
+    let components = message.text.split(/[ _]/)
+    let [_, mention, ...users] = components
     mention = cleanMentionName(mention)
-    let user = message.from.username
-    if (commands.unassign(mention, user)) {
-      slimbot.sendMessage(
-        message.chat.id,
-        `user @${user} unassigned of @${mention}.`
+
+    if (users.length === 0) users = [message.from.username]
+    else {
+      const admins = await slimbot.getChatAdministrators(message.chat.id)
+      const user = admins.result.find(
+        ({ user: { username } }) => username === message.from.username
       )
-    } else {
-      slimbot.sendMessage(
-        message.chat.id,
-        `Mention @${mention} does not exists or you already wasn't assigned into it.`
-      )
+      if (user === undefined) return
+    }
+
+    for (user of users) {
+      if (commands.unassign(mention, user)) {
+        slimbot.sendMessage(
+          message.chat.id,
+          `user @${user} unassigned of @${mention}.`
+        )
+      } else {
+        slimbot.sendMessage(
+          message.chat.id,
+          `Mention @${mention} does not exists or you already wasn't assigned into it.`
+        )
+      }
     }
   }),
   Handler(/^\/delete[ _]/, message => {
