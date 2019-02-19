@@ -113,11 +113,13 @@ const handleMessage = async message => {
   message.text = message.text.replace(/\s{1,}/g, " ")
   const match = handlers.find(({ command }) => command.test(message.text))
   if (match !== undefined) {
-    const { text, reply } = await match.handler(message)
+    const { text, reply, error } = await match.handler(message)
     if (text) {
       const extra = reply ? { reply_to_message_id: message.message_id } : null
       slimbot.sendMessage(message.chat.id, text, extra)
     }
+    if (!error && !reply && text)
+      slimbot.deleteMessage(message.chat.id, message.message_id)
   }
 }
 
