@@ -7,10 +7,14 @@ const Handler = (command, handler) => ({ command, handler })
 function cleanMentionName(mention) {
   return mention.replace(/^@*/g, "")
 }
+function separator(text) {
+  const [command, ...parameters] = text.split(" ")
+  return [...command.replace("_", " ").split(" "), ...parameters]
+}
 
 const handlers = [
   Handler(/^\/create[ _]/, message => {
-    let mention = message.text.split(/[ _]/)[1]
+    let [_, mention] = separator(message.text)
     mention = cleanMentionName(mention)
     let user = message.from.username
     if (commands.createMention(mention, user)) {
@@ -23,8 +27,7 @@ const handlers = [
     }
   }),
   Handler(/^\/enter[ _]/, async message => {
-    let components = message.text.split(/[ _]/)
-    let [_, mention, ...users] = components
+    let [_, mention, ...users] = separator(message.text)
     mention = cleanMentionName(mention)
 
     if (users.length === 0) users = [message.from.username]
@@ -51,8 +54,7 @@ const handlers = [
     }
   }),
   Handler(/^\/exit[ _]/, async message => {
-    let components = message.text.split(/[ _]/)
-    let [_, mention, ...users] = components
+    let [_, mention, ...users] = separator(message.text)
     mention = cleanMentionName(mention)
 
     if (users.length === 0) users = [message.from.username]
@@ -79,7 +81,7 @@ const handlers = [
     }
   }),
   Handler(/^\/delete[ _]/, message => {
-    let mention = message.text.split(/[ _]/)[1]
+    let [_, mention] = separator(message.text)
     mention = cleanMentionName(mention)
     if (commands.deleteMention(mention))
       slimbot.sendMessage(message.chat.id, `Mention @${mention} deleted.`)
@@ -87,8 +89,8 @@ const handlers = [
       slimbot.sendMessage(message.chat.id, `Mention @${mention} doesn't exist.`)
   }),
   Handler(/^\/mentions/, message => {
-    let user = message.text.split(/[ _]/)[1]
-    if (user === 'me') user = message.from.username
+    let [_, user] = separator(message.text)
+    if (user === "me") user = message.from.username
 
     let response = commands.getAllMentions(user).trim()
     if (response !== "") {
@@ -112,7 +114,8 @@ const handlers = [
       })
   }),
   Handler(/^\@.+/, message => {
-    let mention = message.text.split(" ")[0].replace("@", "")
+    let [mention] = separator(message.text)
+    mention = cleanMentionName(mention)
     let response = commands.getMention(mention, message.from.username).trim()
     if (response !== "")
       slimbot.sendMessage(message.chat.id, response, {
@@ -120,7 +123,7 @@ const handlers = [
       })
   }),
   Handler(/^\/list[ _]/, message => {
-    let mention = message.text.split(/[ _]/)[1]
+    let [_, mention] = separator(message.text)
     let response = commands.getMentionMembers(mention).trim()
     if (response !== "")
       slimbot.sendMessage(message.chat.id, response, {
