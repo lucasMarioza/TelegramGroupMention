@@ -87,7 +87,10 @@ const handlers = [
       slimbot.sendMessage(message.chat.id, `Mention @${mention} doesn't exist.`)
   }),
   Handler(/^\/mentions/, message => {
-    let response = commands.getAllMentions().trim()
+    let user = message.text.split(/[ _]/)[1]
+    if (user === 'me') user = message.from.username
+
+    let response = commands.getAllMentions(user).trim()
     if (response !== "") {
       slimbot.sendMessage(message.chat.id, response, {
         reply_to_message_id: message.message_id

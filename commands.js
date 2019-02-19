@@ -46,8 +46,9 @@ function getMentionMembers(mention) {
   return __mentions[mention].sort().join(", ")
 }
 
-function getAllMentions() {
+function getAllMentions(user) {
   return Object.keys(__mentions)
+    .filter(id => user ? __mentions[id].includes(user) : true)
     .map(id => `@${id}`)
     .sort()
     .join("\n")
