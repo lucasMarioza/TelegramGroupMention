@@ -13,7 +13,7 @@ function cleanMentionName(mention) {
   return mention.replace(/^@*/g, "")
 }
 function separator(text) {
-  const [command, ...parameters] = text.split(" ")
+  const [command, ...parameters] = text.replace(/(^\/.*)@[^ ]*/, "").split(" ")
   return [...command.replace("_", " ").split(" "), ...parameters]
 }
 
