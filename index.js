@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const Slimbot = require("slimbot")
 const slimbot = new Slimbot(process.env["BOT_KEY"])
 const restify = require("restify")
