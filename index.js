@@ -41,9 +41,9 @@ server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res, next) {
     .database()
     .ref(`/groups/${message.chat.id}`)
     .once("value")
-    .then(function(snapshot) {
+    .then(async function(snapshot) {
       commands.setMentionsVar(snapshot.val() || {})
-      handleMessage(message)
+      await handleMessage(message)
       firebase
         .database()
         .ref(`/groups/${message.chat.id}`)
