@@ -24,9 +24,10 @@
   },
   "homepage": "https://github.com/lucasMarioza/TelegramGroupMetion#readme",
   "dependencies": {
-    "@firebase/app": "^0.3.8",
-    "@firebase/database": "^0.3.11",
-    "firebase": "^5.8.2",
+    "@firebase/app": "^0.4.13",
+    "@firebase/database": "^0.4.11",
+    "dotenv": "^8.0.0",
+    "firebase": "^6.3.4",
     "restify": "^7.2.1",
     "slimbot": "^0.8.3"
   },
