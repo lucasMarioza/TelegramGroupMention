@@ -8,6 +8,14 @@ function getMentionsVar() {
   return __mentions
 }
 
+function lexiComparator(a, b) {
+  const nameA = a.toLowerCase()
+  const nameB = b.toLowerCase()
+  if (nameA < nameB) return -1
+  if (nameA > nameB) return 1
+  return 0
+}
+
 function createMention(mention, username) {
   if (__mentions[mention] !== undefined) return false
   __mentions[mention] = [username]
@@ -36,21 +44,21 @@ function getMention(mention, username) {
     .map(id => {
       return id !== username ? ` @${id}` : ""
     })
-    .sort()
+    .sort(lexiComparator)
     .join("")
 }
 
 function getMentionMembers(mention) {
   if (__mentions[mention] === undefined || __mentions[mention].length == 0)
     return ""
-  return __mentions[mention].sort().join(", ")
+  return __mentions[mention].sort(lexiComparator).join(", ")
 }
 
 function getAllMentions(user) {
   return Object.keys(__mentions)
     .filter(id => (user ? __mentions[id].includes(user) : true))
     .map(id => `@${id}`)
-    .sort()
+    .sort(lexiComparator)
     .join("\n")
 }
 
