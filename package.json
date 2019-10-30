@@ -28,6 +28,7 @@
     "@firebase/database": "^0.4.11",
     "dotenv": "^8.0.0",
     "firebase": "^6.3.4",
+    "mongodb": "^3.3.3",
     "restify": "^7.2.1",
     "slimbot": "^0.8.3"
   },
