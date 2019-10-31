@@ -8,7 +8,12 @@ let instance = null
  */
 async function getDatabase() {
   if (instance === null) {
-    const client = await MongoClient.connect(process.env.MONGODB_URI)
+    const client = await MongoClient.connect(
+      process.env.MONGODB_URI,
+      {
+        useUnifiedTopology: true
+      }
+    )
     instance = client.db()
   }
   return instance
