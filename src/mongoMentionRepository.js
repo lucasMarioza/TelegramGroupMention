@@ -53,7 +53,6 @@ async function MongoMentionRepository(chatId) {
           }
         }
       )
-      console.log({ result })
       return result.nModified === 1
     },
 
