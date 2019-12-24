@@ -180,3 +180,39 @@ test("exit others with permission", async t => {
   t.true(repositorySpy.calledOnceWithExactly("mention", ["a", "b"]))
   t.deepEqual(result, { message: "Users @a @b unassigned from @mention" })
 })
+
+test("mentions empty", async t => {
+  const repository = { listMentions: () => [] }
+  const spy = sinon.spy(repository, "listMentions")
+
+  const handler = handlers.get("mentions")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, [])
+
+  t.true(spy.calledOnceWithExactly(null))
+  t.deepEqual(result, { error: "No mentions found" })
+})
+
+test("mentions everyone", async t => {
+  const repository = { listMentions: () => ["B", "a"] }
+  const spy = sinon.spy(repository, "listMentions")
+
+  const handler = handlers.get("mentions")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, [])
+
+  t.true(spy.calledOnceWithExactly(null))
+  t.deepEqual(result, { reply: "a\nB" })
+})
+
+test("mentions me", async t => {
+  const repository = { listMentions: () => ["a"] }
+  const spy = sinon.spy(repository, "listMentions")
+
+  const handler = handlers.get("mentions")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["me"], "user")
+
+  t.true(spy.calledOnceWithExactly("user"))
+  t.deepEqual(result, { reply: "a" })
+})

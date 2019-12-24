@@ -1,3 +1,11 @@
+function lexiComparator(a, b) {
+  const nameA = a.toLowerCase()
+  const nameB = b.toLowerCase()
+  if (nameA < nameB) return -1
+  if (nameA > nameB) return 1
+  return 0
+}
+
 const handlers = new Map()
 
 handlers.set("create", async ({ repository }, [mention]) => {
@@ -56,5 +64,13 @@ handlers.set(
     return { message: `Users ${usersString} unassigned from @${mention}` }
   }
 )
+
+handlers.set("mentions", async ({ repository }, [target], user) => {
+  let mentioned = target === undefined ? null : target
+  if (mentioned === "me") mentioned = user
+  const mentions = await repository.listMentions(mentioned)
+  if (mentions.length === 0) return { error: "No mentions found" }
+  return { reply: mentions.sort(lexiComparator).join("\n") }
+})
 
 module.exports = handlers
