@@ -114,3 +114,69 @@ test("enter others with permission", async t => {
   t.true(repositorySpy.calledOnceWithExactly("mention", ["a", "b"]))
   t.deepEqual(result, { message: "Users @a @b assigned to @mention" })
 })
+
+test("exit self", async t => {
+  const repository = { unassignFromMention: () => true }
+  const spy = sinon.spy(repository, "unassignFromMention")
+
+  const handler = handlers.get("exit")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["mention"], "user")
+
+  t.true(spy.calledOnceWithExactly("mention", ["user"]))
+  t.deepEqual(result, { message: "User @user unassigned from @mention" })
+})
+
+test("exit failed", async t => {
+  const repository = { unassignFromMention: () => false }
+  const spy = sinon.spy(repository, "unassignFromMention")
+
+  const handler = handlers.get("exit")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["mention"], "user")
+
+  t.true(spy.calledOnceWithExactly("mention", ["user"]))
+  t.deepEqual(result, {
+    error: "Mention @mention doesn't exists or user(s) aren't assigned to it"
+  })
+})
+
+test("exit others without permission", async t => {
+  const repository = { unassignFromMention: () => true }
+  const repositorySpy = sinon.spy(repository, "unassignFromMention")
+  const telegram = { getChatAdministrators: () => [] }
+  const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
+
+  const handler = handlers.get("exit")
+  t.not(handler, undefined)
+  const result = await handler(
+    { repository, telegram },
+    ["mention", "a", "b"],
+    "user"
+  )
+
+  t.true(telegramSpy.calledOnce)
+  t.true(repositorySpy.notCalled)
+  t.deepEqual(result, { error: "Only admins can unassign other users" })
+})
+
+test("exit others with permission", async t => {
+  const repository = { unassignFromMention: () => true }
+  const repositorySpy = sinon.spy(repository, "unassignFromMention")
+  const telegram = {
+    getChatAdministrators: () => [{ user: { username: "user" } }]
+  }
+  const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
+
+  const handler = handlers.get("exit")
+  t.not(handler, undefined)
+  const result = await handler(
+    { repository, telegram },
+    ["mention", "a", "b"],
+    "user"
+  )
+
+  t.true(telegramSpy.calledOnce)
+  t.true(repositorySpy.calledOnceWithExactly("mention", ["a", "b"]))
+  t.deepEqual(result, { message: "Users @a @b unassigned from @mention" })
+})

@@ -33,4 +33,28 @@ handlers.set(
   }
 )
 
+handlers.set(
+  "exit",
+  async ({ repository, telegram }, [mention, ...users], user, chat) => {
+    let toRemove = [user]
+    if (users.length !== 0) {
+      const admins = await telegram.getChatAdministrators(chat)
+      if (!admins.some(({ user: { username } }) => username === user))
+        return { error: "Only admins can unassign other users" }
+      toRemove = users
+    }
+
+    const ok = await repository.unassignFromMention(mention, toRemove)
+    if (!ok)
+      return {
+        error: `Mention @${mention} doesn't exists or user(s) aren't assigned to it`
+      }
+
+    if (toRemove.length === 1)
+      return { message: `User @${user} unassigned from @${mention}` }
+    const usersString = toRemove.map(user => `@${user}`).join(" ")
+    return { message: `Users ${usersString} unassigned from @${mention}` }
+  }
+)
+
 module.exports = handlers
