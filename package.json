@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "prettier": "prettier --write **/*.js",
+    "prettier": "prettier --write \"src/**/*.js\"",
     "start": "node index.js"
   },
   "repository": {
@@ -31,7 +31,8 @@
   },
   "devDependencies": {
     "ava": "^2.4.0",
-    "prettier": "^1.14.3"
+    "prettier": "^1.14.3",
+    "sinon": "^8.0.1"
   },
   "prettier": {
     "semi": false
