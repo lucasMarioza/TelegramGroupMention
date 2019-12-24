@@ -216,3 +216,59 @@ test("mentions me", async t => {
   t.true(spy.calledOnceWithExactly("user"))
   t.deepEqual(result, { reply: "a" })
 })
+
+test("@ not found", async t => {
+  const repository = { getMention: () => null }
+  const spy = sinon.spy(repository, "getMention")
+
+  const handler = handlers.get("@")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["mention"])
+
+  t.true(spy.calledOnceWithExactly("mention"))
+  t.deepEqual(result, { empty: true })
+})
+
+test("@ match", async t => {
+  const repository = { getMention: () => ["user", "a"] }
+  const spy = sinon.spy(repository, "getMention")
+
+  const handler = handlers.get("@")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["mention"], "user")
+
+  t.true(spy.calledOnceWithExactly("mention"))
+  t.deepEqual(result, { reply: "@a" })
+})
+
+test("@ silent", async t => {
+  const repository = { getMention: () => ["user", "a"] }
+  const spy = sinon.spy(repository, "getMention")
+
+  const handler = handlers.get("@")
+  t.not(handler, undefined)
+  const result = await handler({ repository }, ["!mention"])
+
+  t.true(spy.calledOnceWithExactly("mention"))
+  t.deepEqual(result, { reply: "a\nuser" })
+})
+
+test("@admins", async t => {
+  const repository = { getMention: () => null }
+  const repositorySpy = sinon.spy(repository, "getMention")
+  const telegram = {
+    getChatAdministrators: () => [
+      { user: { username: "user" } },
+      { user: { username: "a" } }
+    ]
+  }
+  const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
+
+  const handler = handlers.get("@")
+  t.not(handler, undefined)
+  const result = await handler({ repository, telegram }, ["admins"])
+
+  t.true(telegramSpy.calledOnce)
+  t.true(repositorySpy.notCalled)
+  t.deepEqual(result, { reply: "@a @user" })
+})

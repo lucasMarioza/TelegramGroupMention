@@ -73,4 +73,28 @@ handlers.set("mentions", async ({ repository }, [target], user) => {
   return { reply: mentions.sort(lexiComparator).join("\n") }
 })
 
+handlers.set("@", async ({ repository, telegram }, [mention], user, chat) => {
+  const parse = mention =>
+    mention[0] === "!" ? [true, mention.substr(1)] : [false, mention]
+  const [silent, name] = parse(mention)
+
+  let users = null
+  if (name === "admins") {
+    const admins = await telegram.getChatAdministrators(chat)
+    users = admins.map(({ user: { username } }) => username)
+  } else {
+    users = await repository.getMention(name)
+    if (users === null || users === []) return { empty: true }
+  }
+
+  if (silent) return { reply: users.sort(lexiComparator).join("\n") }
+  return {
+    reply: users
+      .filter(username => username != user)
+      .sort(lexiComparator)
+      .map(username => `@${username}`)
+      .join(" ")
+  }
+})
+
 module.exports = handlers

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "ava",
-    "prettier": "prettier --write **/*.js",
+    "prettier": "prettier --write \"src/**/*.js\"",
     "start": "node index.js"
   },
   "repository": {
