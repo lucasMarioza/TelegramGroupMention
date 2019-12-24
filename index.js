@@ -1,58 +1,53 @@
 require("dotenv").config()
+const debug = process.env.DEBUG !== undefined
 
 const Slimbot = require("slimbot")
 const slimbot = new Slimbot(process.env["BOT_KEY"])
-const restify = require("restify")
+const { json } = require("micro")
 
-const commands = require("./commands")
-const handleMessage = require("./handlers")
+const textToCommand = require("./src/textToCommand")
+const handlers = require("./src/handlers")
+const MongoMentionRepository = require("./src/mongoMentionRepository")
 
-const firebase = require("firebase")
+if (!debug)
+  slimbot.setWebhook({
+    url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}`
+  })
 
-let server = restify.createServer()
-//console.log(restify);
-server.use(restify.plugins.bodyParser())
+async function run(request, response) {
+  const { message } = await json(request)
+  if (message && (message.text || message.caption)) {
+    const command = textToCommand(message.text, message.caption)
+    if (command.invalid === true) return ""
 
-// Initialize Firebase
-var config = {
-  apiKey: process.env["FIREBASE_KEY"],
-  authDomain: `${process.env["FIREBASE_ID"]}.firebaseapp.com`,
-  databaseURL: `https://${process.env["FIREBASE_ID"]}.firebaseio.com`,
-  projectId: process.env["FIREBASE_ID"],
-  storageBucket: `${process.env["FIREBASE_ID"]}.appspot.com`,
-  messagingSenderId: process.env["FIREBASE_SENDER"]
-}
+    const handler = handlers.get(command.name)
+    if (handler === undefined) return ""
 
-const fireApp = firebase.initializeApp(config)
+    const repository = await MongoMentionRepository(message.chat.id)
+    const result = await handler(
+      { repository, telegram: slimbot },
+      command.params,
+      message.from.username,
+      message.chat.id
+    )
 
-slimbot.setWebhook({
-  url: `${process.env["ORIGIN"]}/${process.env["BOT_KEY"]}`
-})
-
-slimbot.getWebhookInfo()
-
-// Register listeners
-server.post(`/${process.env["BOT_KEY"]}`, function handle(req, res, next) {
-  let message = req.body.message
-  if (!message || !message.text) {
-    res.send(200)
-    return next()
+    if (debug) {
+      console.log(result)
+      return result
+    }
+    if (result.empty !== true) {
+      const text = result.message || result.reply || result.error
+      const extra =
+        result.reply || result.error
+          ? { reply_to_message_id: message.message_id }
+          : null
+      slimbot.sendMessage(message.chat.id, text, extra)
+    }
+    if (result.message)
+      slimbot.deleteMessage(message.chat.id, message.message_id)
   }
 
-  mention = firebase
-    .database()
-    .ref(`/groups/${message.chat.id}`)
-    .once("value")
-    .then(async function(snapshot) {
-      commands.setMentionsVar(snapshot.val() || {})
-      await handleMessage(message)
-      firebase
-        .database()
-        .ref(`/groups/${message.chat.id}`)
-        .set(commands.getMentionsVar())
-    })
-  res.send(200)
-  return next()
-})
+  return ""
+}
 
-server.listen(process.env["PORT"])
+module.exports = run
