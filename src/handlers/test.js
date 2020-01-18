@@ -263,10 +263,9 @@ test("@admins", async t => {
   const repository = { getMention: () => null }
   const repositorySpy = sinon.spy(repository, "getMention")
   const telegram = {
-    getChatAdministrators: () => [
-      { user: { username: "user" } },
-      { user: { username: "a" } }
-    ]
+    getChatAdministrators: () => ({
+      result: [{ user: { username: "user" } }, { user: { username: "a" } }]
+    })
   }
   const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
 
