@@ -17,7 +17,7 @@ if (!debug)
 async function run(request, response) {
   const { message } = await json(request)
   if (message && (message.text || message.caption)) {
-    const command = textToCommand(message.text, message.caption)
+    const command = textToCommand(message.text || message.caption)
     if (command.invalid === true) return ""
 
     const handler = handlers.get(command.name)
