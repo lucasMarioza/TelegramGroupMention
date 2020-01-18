@@ -25,17 +25,20 @@ handlers.set(
   async ({ repository, telegram }, [mention, ...users], user, chat) => {
     let toAdd = [user]
     if (users.length !== 0) {
-      const admins = await telegram.getChatAdministrators(chat)
+      const admins = (await telegram.getChatAdministrators(chat)).result
       if (!admins.some(({ user: { username } }) => username === user))
         return { error: "Only admins can assign other users" }
       toAdd = users
     }
 
     const ok = await repository.assignToMention(mention, toAdd)
-    if (!ok) return { error: `Mention @${mention} doesn't exists` }
+    if (!ok)
+      return {
+        error: `Mention @${mention} doesn't exists or users are already assigned`
+      }
 
     if (toAdd.length === 1)
-      return { message: `User @${user} assigned to @${mention}` }
+      return { message: `User @${toAdd[0]} assigned to @${mention}` }
     const usersString = toAdd.map(user => `@${user}`).join(" ")
     return { message: `Users ${usersString} assigned to @${mention}` }
   }
