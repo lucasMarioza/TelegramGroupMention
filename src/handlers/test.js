@@ -72,13 +72,17 @@ test("enter failed", async t => {
   const result = await handler({ repository }, ["mention"], "user")
 
   t.true(spy.calledOnceWithExactly("mention", ["user"]))
-  t.deepEqual(result, { error: "Mention @mention doesn't exists" })
+  t.deepEqual(result, {
+    error: "Mention @mention doesn't exists or users are already assigned"
+  })
 })
 
 test("enter others without permission", async t => {
   const repository = { assignToMention: () => true }
   const repositorySpy = sinon.spy(repository, "assignToMention")
-  const telegram = { getChatAdministrators: () => [] }
+  const telegram = {
+    getChatAdministrators: () => ({ result: [] })
+  }
   const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
 
   const handler = handlers.get("enter")
@@ -98,7 +102,9 @@ test("enter others with permission", async t => {
   const repository = { assignToMention: () => true }
   const repositorySpy = sinon.spy(repository, "assignToMention")
   const telegram = {
-    getChatAdministrators: () => [{ user: { username: "user" } }]
+    getChatAdministrators: () => ({
+      result: [{ user: { username: "user" } }]
+    })
   }
   const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
 
