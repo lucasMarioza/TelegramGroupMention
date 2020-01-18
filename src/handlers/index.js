@@ -83,7 +83,7 @@ handlers.set("@", async ({ repository, telegram }, [mention], user, chat) => {
 
   let users = null
   if (name === "admins") {
-    const admins = await telegram.getChatAdministrators(chat)
+    const admins = (await telegram.getChatAdministrators(chat)).result
     users = admins.map(({ user: { username } }) => username)
   } else {
     users = await repository.getMention(name)
