@@ -98,6 +98,29 @@ test("enter others without permission", async t => {
   t.deepEqual(result, { error: "Only admins can assign other users" })
 })
 
+test("enter another with permission", async t => {
+  const repository = { assignToMention: () => true }
+  const repositorySpy = sinon.spy(repository, "assignToMention")
+  const telegram = {
+    getChatAdministrators: () => ({
+      result: [{ user: { username: "user" } }]
+    })
+  }
+  const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
+
+  const handler = handlers.get("enter")
+  t.not(handler, undefined)
+  const result = await handler(
+    { repository, telegram },
+    ["mention", "a"],
+    "user"
+  )
+
+  t.true(telegramSpy.calledOnce)
+  t.true(repositorySpy.calledOnceWithExactly("mention", ["a"]))
+  t.deepEqual(result, { message: "User @a assigned to @mention" })
+})
+
 test("enter others with permission", async t => {
   const repository = { assignToMention: () => true }
   const repositorySpy = sinon.spy(repository, "assignToMention")
@@ -164,6 +187,27 @@ test("exit others without permission", async t => {
   t.true(telegramSpy.calledOnce)
   t.true(repositorySpy.notCalled)
   t.deepEqual(result, { error: "Only admins can unassign other users" })
+})
+
+test("exit another with permission", async t => {
+  const repository = { unassignFromMention: () => true }
+  const repositorySpy = sinon.spy(repository, "unassignFromMention")
+  const telegram = {
+    getChatAdministrators: () => ({ result: [{ user: { username: "user" } }] })
+  }
+  const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
+
+  const handler = handlers.get("exit")
+  t.not(handler, undefined)
+  const result = await handler(
+    { repository, telegram },
+    ["mention", "a"],
+    "user"
+  )
+
+  t.true(telegramSpy.calledOnce)
+  t.true(repositorySpy.calledOnceWithExactly("mention", ["a"]))
+  t.deepEqual(result, { message: "User @a unassigned from @mention" })
 })
 
 test("exit others with permission", async t => {
