@@ -49,7 +49,7 @@ handlers.set(
   async ({ repository, telegram }, [mention, ...users], user, chat) => {
     let toRemove = [user]
     if (users.length !== 0) {
-      const admins = await telegram.getChatAdministrators(chat)
+      const admins = (await telegram.getChatAdministrators(chat)).result
       if (!admins.some(({ user: { username } }) => username === user))
         return { error: "Only admins can unassign other users" }
       toRemove = users
