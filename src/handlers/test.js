@@ -150,7 +150,7 @@ test("exit failed", async t => {
 test("exit others without permission", async t => {
   const repository = { unassignFromMention: () => true }
   const repositorySpy = sinon.spy(repository, "unassignFromMention")
-  const telegram = { getChatAdministrators: () => [] }
+  const telegram = { getChatAdministrators: () => ({ result: [] }) }
   const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
 
   const handler = handlers.get("exit")
@@ -170,7 +170,7 @@ test("exit others with permission", async t => {
   const repository = { unassignFromMention: () => true }
   const repositorySpy = sinon.spy(repository, "unassignFromMention")
   const telegram = {
-    getChatAdministrators: () => [{ user: { username: "user" } }]
+    getChatAdministrators: () => ({ result: [{ user: { username: "user" } }] })
   }
   const telegramSpy = sinon.spy(telegram, "getChatAdministrators")
 
