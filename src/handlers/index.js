@@ -62,7 +62,7 @@ handlers.set(
       }
 
     if (toRemove.length === 1)
-      return { message: `User @${user} unassigned from @${mention}` }
+      return { message: `User @${toRemove[0]} unassigned from @${mention}` }
     const usersString = toRemove.map(user => `@${user}`).join(" ")
     return { message: `Users ${usersString} unassigned from @${mention}` }
   }
